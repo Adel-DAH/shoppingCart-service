@@ -43,7 +43,7 @@ public class ShoppingCartService {
     public ShoppingCart addProductToCart(String productId, String cartId, BigDecimal quantity) {
 
         Product product = productService.getProduct(productId).orElseThrow(() -> new IllegalArgumentException("Unknown product " + productId));
-        ShoppingCart cart = getShoppingCart(cartId);
+        ShoppingCart cart = getShoppingCart(cartId).orElseThrow(() -> new NoSuchElementException("cart not found"));
         Optional<CartItem> existing = cart.getItems().stream().filter(it -> it.getCode().equals(product.getReference())).findFirst();
         if (existing.isPresent()) {
             //  and item aleady exist, just add the desired quantity
@@ -70,14 +70,14 @@ public class ShoppingCartService {
     }
 
     public ShoppingCart removeProductFromCart(String productId, String cartId) {
-        ShoppingCart cart = getShoppingCart(cartId);
+        ShoppingCart cart = getShoppingCart(cartId).orElseThrow(() -> new NoSuchElementException("cart dosent exist"));
         cart.removeItem(productId);
         cartContentUpdated(cart);
         return cart;
     }
 
-    public ShoppingCart getShoppingCart(String cartId) {
-        return carts.get(cartId);
+    public Optional<ShoppingCart> getShoppingCart(String cartId) {
+        return Optional.ofNullable(carts.get(cartId));
     }
 
     /**

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -39,7 +40,8 @@ public class SimpleController {
             , description = "Add a product to the shopping cart with a desired quantity"
             , tags = { "cartItem" })
     @PostMapping(value = "/cart/{cartId}/item")
-    public ShoppingCart addProductToCart(@PathVariable("cartId") String cartId, @RequestParam String productReference, @RequestParam BigDecimal quantity) {
+    //POST : http://localhost:8080/cart/1235756/item?productReference="HGDNGDT"&quantity=10.05
+    public ShoppingCart addProductToCart(@PathVariable("cartId") String cartId, @RequestParam("productReference") String productReference, @RequestParam("quantity") BigDecimal quantity) {
         return cartService.addProductToCart(productReference, cartId, quantity);
     }
 
@@ -53,7 +55,7 @@ public class SimpleController {
 
     @GetMapping(value = "/cart/{cartId}")
     public ShoppingCart getCart(@PathVariable("cartId") String cartId) {
-        return cartService.getShoppingCart(cartId);
+        return cartService.getShoppingCart(cartId).orElseThrow(() -> new NoSuchElementException("cart not found"));
     }
 
 }

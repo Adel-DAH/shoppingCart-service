@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,7 @@ public class ShoppingCartTest {
     @Test
     public void testInitCartWthCorrectShopAndCustomerCreateAnEmptyCart() throws InterruptedException {
         ShoppingCart cart = cartService.initShoppingCart( 1);
-        ShoppingCart retrievIt = cartService.getShoppingCart(cart.getId());
+        ShoppingCart retrievIt = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
         assertEquals(cart, retrievIt);
     }
 
@@ -30,7 +31,7 @@ public class ShoppingCartTest {
         ShoppingCart cart = cartService.initShoppingCart( 1);
         cartService.addProductToCart("prod01", cart.getId(), new BigDecimal(1));
         cartService.addProductToCart("prod01", cart.getId(), new BigDecimal(1));
-        cart = cartService.getShoppingCart(cart.getId());
+        cart = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
         assertEquals(2, cart.getItems().get(0).getQuantity().intValue());
         // two items of 10 will give a total price  = 20
         assertEquals(20, cart.getTotalPrice().intValue());
@@ -40,7 +41,7 @@ public class ShoppingCartTest {
     public void testRemoveAllProductsFromCartWillUpdateTheTotalPriceToZero() throws InterruptedException {
         ShoppingCart cart = cartService.initShoppingCart( 1);
         cartService.addProductToCart("prod02", cart.getId(), new BigDecimal(3));
-        cart = cartService.getShoppingCart(cart.getId());
+        cart = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
         assertEquals(3, cart.getItems().get(0).getQuantity().intValue());
         // 3 items of 5 euros will give a total price  = 15
         assertEquals(15, cart.getTotalPrice().intValue());

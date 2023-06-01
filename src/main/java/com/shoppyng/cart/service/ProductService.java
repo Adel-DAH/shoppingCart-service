@@ -1,9 +1,9 @@
 package com.shoppyng.cart.service;
 
 import com.shoppyng.cart.model.Product;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class ProductService {
     }
 
     private Product createProduct(String name, String ref, String desc, BigDecimal price) {
-        Product prod  = new Product();
+        Product prod = new Product();
         prod.setName(name);
         prod.setReference(ref);
         prod.setDescription(desc);
@@ -35,7 +35,7 @@ public class ProductService {
         return prod;
     }
 
-    public Optional<Product> getProduct(String productReference){
+    public Optional<Product> getProduct(String productReference) {
         return Optional.ofNullable(products.get(productReference));
     }
 
