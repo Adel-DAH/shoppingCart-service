@@ -1,21 +1,34 @@
 package com.shoppyng.cart.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 /**
  * In a real world, a customer have a lot of other information
  * The access credentials to the system, loyalty card, contact preferences, subscriptions for feeds ...
  */
+@Entity
 public class Customer {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
     private Integer id;
+
+    @Column(name="firstName")
     private String firstName;
+    @Column(name="lastName")
     private String lastName;
     /**
      * This a simple contact implementation, is real usage we can meet multi contact management to let customers manage more than one address
      * We can also separate delivery address from billing address.
      */
+    @OneToOne(mappedBy = "customer")
     private Address address;
+
+    @OneToOne(mappedBy = "customer")
+    private ShoppingCart shoppingCart;
 
 
     public Integer getId() {
@@ -48,6 +61,14 @@ public class Customer {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 
     @Override

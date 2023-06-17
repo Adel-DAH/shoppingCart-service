@@ -1,19 +1,43 @@
 package com.shoppyng.cart.model;
 
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 
 /**
  * This is a simple implementation of a cart item
  * In real world, this could contains more information, like properties from the product (product attributes , parent category, quantity unit, discounts ...)
  */
+@Entity
 public class CartItem {
 
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    private Integer id;
+    @Column(name = "code")
     private String code;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "unitPrice")
     private BigDecimal unitPrice;
+    @Column(name = "quantity")
     private BigDecimal quantity;
+    @Column(name = "calculatedPrice")
     private BigDecimal calculatedPrice;
+
+    @ManyToOne
+    ShoppingCart shoppingCart;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getCode() {
         return code;
@@ -63,4 +87,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 }

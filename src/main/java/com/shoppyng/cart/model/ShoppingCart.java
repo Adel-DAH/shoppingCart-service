@@ -1,19 +1,28 @@
 package com.shoppyng.cart.model;
 
 
+import jakarta.persistence.*;
+import org.hibernate.annotations.Type;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
+@Entity
 public class ShoppingCart {
 
+    @Id
+    @GeneratedValue
     private UUID id;
 
+    @Column(name = "creationDate")
     private Date creationDate;
 
+    @OneToOne
     private Customer customer;
 
+    @OneToMany
     private List<CartItem> items = new ArrayList<>(0);
 
     private BigDecimal totalPrice;
