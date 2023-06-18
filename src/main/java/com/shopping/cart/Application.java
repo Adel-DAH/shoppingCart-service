@@ -1,4 +1,4 @@
-package com.shoppyng.cart;
+package com.shopping.cart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

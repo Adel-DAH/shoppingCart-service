@@ -1,4 +1,4 @@
-package com.shoppyng.cart.model;
+package com.shopping.cart.model;
 
 import jakarta.persistence.*;
 

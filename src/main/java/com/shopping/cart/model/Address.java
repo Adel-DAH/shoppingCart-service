@@ -1,8 +1,6 @@
-package com.shoppyng.cart.model;
+package com.shopping.cart.model;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
 
 /**
  * Simple empty class for test purpose

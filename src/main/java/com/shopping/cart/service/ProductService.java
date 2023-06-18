@@ -1,6 +1,6 @@
-package com.shoppyng.cart.service;
+package com.shopping.cart.service;
 
-import com.shoppyng.cart.model.Product;
+import com.shopping.cart.model.Product;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,8 @@
-package com.shoppyng.cart.api;
+package com.shopping.cart.api.controller;
 
-import com.shoppyng.cart.model.ShoppingCart;
-import com.shoppyng.cart.service.ShoppingCartService;
+import com.shopping.cart.api.dto.ShoppingCartDTO;
+import com.shopping.cart.model.ShoppingCart;
+import com.shopping.cart.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +33,7 @@ public class SimpleController {
                     content = @Content( schema = @Schema(implementation = ShoppingCart.class)))
     })
     @PostMapping(value = "/customer/{customerId}/cart")
-    public ShoppingCart initCart(@PathVariable Integer customerId) {
+    public ShoppingCartDTO initCart(@PathVariable Integer customerId) {
         return cartService.initShoppingCart(customerId);
     }
 
@@ -49,12 +50,12 @@ public class SimpleController {
             , description = "Remove a product from the shopping cart"
             , tags = { "cartItem" })
     @DeleteMapping(value = "/cart/{cartId}/item/{reference}")
-    public ShoppingCart removeProductFromCart(@PathVariable("cartId") String cartId, @PathVariable("reference") String productReference) {
+    public ShoppingCartDTO removeProductFromCart(@PathVariable("cartId") String cartId, @PathVariable("reference") String productReference) {
         return cartService.removeProductFromCart(productReference, cartId);
     }
 
     @GetMapping(value = "/cart/{cartId}")
-    public ShoppingCart getCart(@PathVariable("cartId") String cartId) {
+    public ShoppingCartDTO getCart(@PathVariable("cartId") String cartId) {
         return cartService.getShoppingCart(cartId).orElseThrow(() -> new NoSuchElementException("cart not found"));
     }
 

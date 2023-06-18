@@ -1,4 +1,4 @@
-package com.shoppyng.cart.api;
+package com.shopping.cart.api.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

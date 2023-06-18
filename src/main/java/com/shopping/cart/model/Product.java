@@ -1,4 +1,4 @@
-package com.shoppyng.cart.model;
+package com.shopping.cart.model;
 
 import java.math.BigDecimal;
 import java.util.Objects;

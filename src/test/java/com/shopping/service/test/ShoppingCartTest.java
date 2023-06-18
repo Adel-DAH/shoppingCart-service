@@ -1,9 +1,10 @@
-package com.shoppyng.service.test;
+package com.shopping.service.test;
 
 
-import com.shoppyng.cart.Application;
-import com.shoppyng.cart.model.ShoppingCart;
-import com.shoppyng.cart.service.ShoppingCartService;
+import com.shopping.cart.Application;
+import com.shopping.cart.api.dto.ShoppingCartDTO;
+import com.shopping.cart.service.ShoppingCartService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +21,17 @@ public class ShoppingCartTest {
     private ShoppingCartService cartService;
 
     @Test
+    @Transactional
     public void testInitCartWthCorrectShopAndCustomerCreateAnEmptyCart() throws InterruptedException {
-        ShoppingCart cart = cartService.initShoppingCart( 1);
-        ShoppingCart retrievIt = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
+        ShoppingCartDTO cart = cartService.initShoppingCart( 1);
+        ShoppingCartDTO retrievIt = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
         assertEquals(cart, retrievIt);
     }
 
     @Test
+    @Transactional
     public void testAddProductToCart() throws InterruptedException {
-        ShoppingCart cart = cartService.initShoppingCart( 1);
+        ShoppingCartDTO cart = cartService.initShoppingCart( 1);
         cartService.addProductToCart("prod01", cart.getId(), new BigDecimal(1));
         cartService.addProductToCart("prod01", cart.getId(), new BigDecimal(1));
         cart = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
@@ -38,8 +41,9 @@ public class ShoppingCartTest {
     }
 
     @Test
+    @Transactional
     public void testRemoveAllProductsFromCartWillUpdateTheTotalPriceToZero() throws InterruptedException {
-        ShoppingCart cart = cartService.initShoppingCart( 1);
+        ShoppingCartDTO cart = cartService.initShoppingCart( 1);
         cartService.addProductToCart("prod02", cart.getId(), new BigDecimal(3));
         cart = cartService.getShoppingCart(cart.getId()).orElseThrow(() -> new NoSuchElementException("cart not found"));
         assertEquals(3, cart.getItems().get(0).getQuantity().intValue());
@@ -58,8 +62,9 @@ public class ShoppingCartTest {
     }
 
     @Test
+    @Transactional
     public void addWrongProductReferenceThrowIllegalArgumentException() throws InterruptedException {
-        ShoppingCart cart = cartService.initShoppingCart( 1);
+        ShoppingCartDTO cart = cartService.initShoppingCart( 1);
         assertThrows(IllegalArgumentException.class, () ->  cartService.addProductToCart("aWrongProduct" , cart.getId(), BigDecimal.ONE));
     }
 

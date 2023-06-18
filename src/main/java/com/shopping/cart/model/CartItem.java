@@ -1,4 +1,4 @@
-package com.shoppyng.cart.model;
+package com.shopping.cart.model;
 
 import jakarta.persistence.*;
 
@@ -28,7 +28,7 @@ public class CartItem {
     @Column(name = "calculatedPrice")
     private BigDecimal calculatedPrice;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     ShoppingCart shoppingCart;
 
     public Integer getId() {

@@ -1,8 +1,7 @@
-package com.shoppyng.cart.model;
+package com.shopping.cart.model;
 
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.util.*;
