@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class ShoppingCart {
 
     @Id
-    @GeneratedValue
     private UUID id;
 
     @Column(name = "creationDate")

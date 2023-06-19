@@ -2,6 +2,7 @@ package com.shopping.cart.api.controller;
 
 import com.shopping.cart.api.dto.ShoppingCartDTO;
 import com.shopping.cart.model.ShoppingCart;
+
 import com.shopping.cart.service.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,7 +43,7 @@ public class SimpleController {
             , tags = { "cartItem" })
     @PostMapping(value = "/cart/{cartId}/item")
     //POST : http://localhost:8080/cart/1235756/item?productReference="HGDNGDT"&quantity=10.05
-    public ShoppingCart addProductToCart(@PathVariable("cartId") String cartId, @RequestParam("productReference") String productReference, @RequestParam("quantity") BigDecimal quantity) {
+    public ShoppingCartDTO addProductToCart(@PathVariable("cartId") String cartId, @RequestParam("productReference") String productReference, @RequestParam("quantity") BigDecimal quantity) {
         return cartService.addProductToCart(productReference, cartId, quantity);
     }
 

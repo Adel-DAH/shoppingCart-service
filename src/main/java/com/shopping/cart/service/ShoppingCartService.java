@@ -21,12 +21,15 @@ public class ShoppingCartService {
     private final CustomerService customerService;
     private final ProductService productService;
 
-    public ShoppingCartService(ShoppingCartMapper shoppingCartMapper, ShoppingCartRepository shoppingCartRepository, CustomerService customerService, ProductService productService) {
+    private CartItemService itemService;
+
+    public ShoppingCartService(ShoppingCartMapper shoppingCartMapper, ShoppingCartRepository shoppingCartRepository, CustomerService customerService, ProductService productService, CartItemService itemService) {
 
         this.shoppingCartMapper = shoppingCartMapper;
         this.shoppingCartRepository = shoppingCartRepository;
         this.customerService = customerService;
         this.productService = productService;
+        this.itemService = itemService;
     }
 
     /**
@@ -52,28 +55,29 @@ public class ShoppingCartService {
         return shoppingCartMapper.toDTO(cart);
     }
 
-    public ShoppingCart addProductToCart(String productId, String cartId, BigDecimal quantity) {
+    public ShoppingCartDTO addProductToCart(String productReference, String cartId, BigDecimal quantity) {
 
-        Product product = productService.getProduct(productId).orElseThrow(() -> new IllegalArgumentException("Unknown product " + productId));
+        Product product = productService.getProduct(productReference).orElseThrow(() -> new IllegalArgumentException("Unknown product " + productReference));
         ShoppingCart cart = shoppingCartRepository.findById(UUID.fromString(cartId)).orElseThrow(() -> new NoSuchElementException("cart not found"));
         Optional<CartItem> existing = cart.getItems().stream().filter(it -> it.getCode().equals(product.getReference())).findFirst();
         if (existing.isPresent()) {
             //  and item aleady exist, just add the desired quantity
             existing.get().setQuantity(existing.get().getQuantity().add(quantity));
             cartContentUpdated(cart);
-            return cart;
+        } else {
+            // else create new item in the shopping cart
+            CartItem item = new CartItem();
+            item.setQuantity(quantity);
+            item.setCode(product.getReference());
+            item.setName(product.getName());
+            item.setUnitPrice(product.getPrice());
+            item.setDescription(product.getDescription());
+            item.setShoppingCart(cart);
+            cart.addItem(itemService.save(item));
+            // notify the cart update to racalculate prices et trgger other needed operations
+            cartContentUpdated(cart);
         }
-        // else create new item in the shopping cart
-        CartItem item = new CartItem();
-        item.setQuantity(quantity);
-        item.setCode(product.getReference());
-        item.setName(product.getName());
-        item.setUnitPrice(product.getPrice());
-        item.setDescription(product.getDescription());
-        cart.addItem(item);
-        // notify the cart update to racalculate prices et trgger other needed operations
-        cartContentUpdated(cart);
-        return cart;
+        return shoppingCartMapper.toDTO(shoppingCartRepository.save(cart));
     }
 
 

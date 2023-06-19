@@ -3,6 +3,8 @@ package com.shopping.cart.service;
 import com.shopping.cart.model.Product;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -13,18 +15,9 @@ import java.util.Optional;
 public class ProductService {
 
 
-    private final Map<String, Product> products = new HashMap<String, Product>();
-
     /**
      * For test purpose
      */
-    @PostConstruct
-    public void init() {
-        Product prod1 = createProduct("Milka", "prod01", "this is our Milka description", BigDecimal.TEN);
-        Product prod2 = createProduct("Cheese", "prod02", "this is our Cheese description", new BigDecimal(5));
-        this.products.put(prod1.getReference(), prod1);
-        this.products.put(prod2.getReference(), prod2);
-    }
 
     private Product createProduct(String name, String ref, String desc, BigDecimal price) {
         Product prod = new Product();
@@ -36,7 +29,14 @@ public class ProductService {
     }
 
     public Optional<Product> getProduct(String productReference) {
-        return Optional.ofNullable(products.get(productReference));
+
+        WebClient client = WebClient.create();
+        Product product = client.get()
+                .uri( "http://localhost:8082/product/" + productReference)
+                .retrieve().bodyToMono(Product.class)
+                .onErrorResume(error -> Mono.empty())
+                .block();
+            return Optional.ofNullable(product);
     }
 
 }
