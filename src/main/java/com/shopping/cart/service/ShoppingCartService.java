@@ -5,12 +5,14 @@ import com.shopping.cart.api.mapper.ShoppingCartMapper;
 import com.shopping.cart.model.*;
 import com.shopping.cart.repository.ShoppingCartRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 @Service
+@Transactional
 public class ShoppingCartService {
 
     /**
@@ -61,8 +63,10 @@ public class ShoppingCartService {
         ShoppingCart cart = shoppingCartRepository.findById(UUID.fromString(cartId)).orElseThrow(() -> new NoSuchElementException("cart not found"));
         Optional<CartItem> existing = cart.getItems().stream().filter(it -> it.getCode().equals(product.getReference())).findFirst();
         if (existing.isPresent()) {
-            //  and item aleady exist, just add the desired quantity
-            existing.get().setQuantity(existing.get().getQuantity().add(quantity));
+            CartItem item = existing.get();
+            //  and item already exist, just add the desired quantity
+            item.setQuantity(item.getQuantity().add(quantity));
+            CartItem updatedItem = itemService.save(item);
             cartContentUpdated(cart);
         } else {
             // else create new item in the shopping cart

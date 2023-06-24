@@ -55,6 +55,8 @@ public class SimpleController {
         return cartService.removeProductFromCart(productReference, cartId);
     }
 
+    @Operation(summary = "get shopping cart"
+            , description = "get a shopping cart  by id ")
     @GetMapping(value = "/cart/{cartId}")
     public ShoppingCartDTO getCart(@PathVariable("cartId") String cartId) {
         return cartService.getShoppingCart(cartId).orElseThrow(() -> new NoSuchElementException("cart not found"));

@@ -5,12 +5,14 @@ import com.shopping.cart.model.Customer;
 
 import com.shopping.cart.repository.CustomerRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 
 @Service
+@Transactional
 public class CustomerService {
 
     private final CustomerRepository customerRepository;

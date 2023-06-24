@@ -1,14 +1,20 @@
 package com.shopping.cart.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Product {
 
+
     private String reference;
+
     private String name;
+
     private String description;
     /* simple price implementation */
+
     private BigDecimal price;
 
     public String getReference() {
@@ -58,4 +64,5 @@ public class Product {
     public int hashCode() {
         return Objects.hash(reference, name, description, price);
     }
+
 }
